@@ -34,8 +34,8 @@ function is_really_writable($file)
     return TRUE;
 }
 
-$sitename = "FastAdmin";
-
+// $sitename = "FastAdmin";
+$sitename = "智游助手后台管理系统";
 $link = array(
     'qqun'  => "https://jq.qq.com/?_wv=1027&amp;k=487PNBb",
     'gitee' => 'https://gitee.com/karson/fastadmin/attach_files',

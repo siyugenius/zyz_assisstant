@@ -1,11 +1,11 @@
 <?php
 
 return array (
-  'name' => 'FastAdmin',
+  'name' => '智游助手后台管理系统',
   'beian' => '',
   'cdnurl' => '',
-  'version' => '1.0.1',
-  'timezone' => 'Asia/Shanghai',
+  'version' => '1.0',
+  'timezone' => 'Asia/ShenZhen',
   'forbiddenip' => '',
   'languages' => 
   array (

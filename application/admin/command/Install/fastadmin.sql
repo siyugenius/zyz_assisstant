@@ -1,12 +1,3 @@
-/*
- FastAdmin Install SQL
-
- 官网: https://www.fastadmin.net
- 演示: https://demo.fastadmin.net
-
- Date: 2018年05月26日
-*/
-
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------

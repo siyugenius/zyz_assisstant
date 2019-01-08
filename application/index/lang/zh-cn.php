@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'Keep login'                                             => '保持会话',
+    'Keep login'                                             => '记住我',
     'Forgot password'                                        => '忘记密码?',
     'Username'                                               => '用户名',
     'User id'                                                => '会员ID',
