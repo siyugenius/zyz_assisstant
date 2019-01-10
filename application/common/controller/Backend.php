@@ -156,7 +156,7 @@ class Backend extends Controller
                 }
                 $url = url($url, '', false);
             }
-            $this->redirect('index/index', [], 302, ['referer' => $url]);
+            // $this->redirect('index/index', [], 302, ['referer' => $url]);
             exit;
         }
 
