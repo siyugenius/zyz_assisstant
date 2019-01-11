@@ -1,0 +1,52 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Grp_id')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-grp_id" data-rule="required" data-source="grp/index" class="form-control selectpage" name="row[grp_id]" type="text" value="{$row.grp_id}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Grp_name')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-grp_name" data-rule="required" class="form-control" name="row[grp_name]" type="text" value="{$row.grp_name}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Grp_agent')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-grp_agent" data-rule="required" class="form-control" name="row[grp_agent]" type="text" value="{$row.grp_agent}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Grp_mobile')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-grp_mobile" data-rule="required" class="form-control" name="row[grp_mobile]" type="text" value="{$row.grp_mobile}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Other_mobile')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-other_mobile" class="form-control" name="row[other_mobile]" type="text" value="{$row.other_mobile}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Grp_status')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            
+            <div class="radio">
+            {foreach name="grpStatusList" item="vo"}
+            <label for="row[grp_status]-{$key}"><input id="row[grp_status]-{$key}" name="row[grp_status]" type="radio" value="{$key}" {in name="key" value="$row.grp_status"}checked{/in} /> {$vo}</label> 
+            {/foreach}
+            </div>
+
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>
