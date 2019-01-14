@@ -18,15 +18,31 @@ class Hotel extends Model
     
     // 追加属性
     protected $append = [
-
+        'status_text'
     ];
     
 
     
+    public function getStatusList()
+    {
+        return ['1' => __('Status 1'),'2' => __('Status 2')];
+    }     
 
 
+    public function getStatusTextAttr($value, $data)
+    {        
+        $value = $value ? $value : (isset($data['status']) ? $data['status'] : '');
+        $list = $this->getStatusList();
+        return isset($list[$value]) ? $list[$value] : '';
+    }
 
 
+    public function group(){
+
+
+        return $this->belongsTo('HotelGroup', 'group_id','id')->setEagerlyType(0);
+
+    }
 
 
 

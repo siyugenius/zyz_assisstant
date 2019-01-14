@@ -5,23 +5,23 @@ namespace app\admin\controller;
 use app\common\controller\Backend;
 
 /**
- * 酒店管理
+ * 地区管理
  *
- * @icon fa fa-hotel
+ * @icon fa fa-circle-o
  */
-class Hotel extends Backend
+class Area extends Backend
 {
     
     /**
-     * Hotel模型对象
-     * @var \app\admin\model\Hotel
+     * Area模型对象
+     * @var \app\admin\model\Area
      */
     protected $model = null;
 
     public function _initialize()
     {
         parent::_initialize();
-        $this->model = new \app\admin\model\Hotel;
+        $this->model = new \app\admin\model\Area;
 
     }
     

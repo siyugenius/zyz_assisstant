@@ -1,9 +1,9 @@
 <form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
 
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Hotel_id')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">{:__('Hotel_no')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-hotel_id" data-rule="required" data-source="hotel/index" class="form-control selectpage" name="row[hotel_id]" type="text" value="{$row.hotel_id}">
+            <input id="c-hotel_no" data-rule="required" class="form-control" name="row[hotel_no]" type="text" value="{$row.hotel_no}">
         </div>
     </div>
     <div class="form-group">
@@ -15,31 +15,25 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Group_id')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-group_id" data-rule="required" data-source="group/index" class="form-control selectpage" name="row[group_id]" type="text" value="{$row.group_id}">
+            {$groupList}
         </div>
     </div>
+
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Province_id')}:</label>
+        <label for="c-type" class="control-label col-xs-12 col-sm-2">{:__('Address')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-province_id" data-rule="required" data-source="province/index" class="form-control selectpage" name="row[province_id]" type="text" value="{$row.province_id}">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('City_id')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-city_id" data-rule="required" data-source="city/index" class="form-control selectpage" name="row[city_id]" type="text" value="{$row.city_id}">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Area_id')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-area_id" data-rule="required" data-source="area/index" class="form-control selectpage" name="row[area_id]" type="text" value="{$row.area_id}">
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Addr')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <textarea id="c-addr" data-rule="required" class="form-control " rows="5" name="row[addr]" cols="50">{$row.addr}</textarea>
+            <div class="form-inline" id="c-type" data-toggle="cxselect" data-selects="province,city,area">
+                <select class="province form-control" name="row[province_id]" data-url="ajax/area">
+                    <option value="{$row.province_id}" selected=""></option>
+                </select>
+                <select class="city form-control" name="row[city_id]" data-url="ajax/area">
+                    <option value="{$row.city_id}" selected=""></option>
+                </select>
+                <select class="area form-control" name="row[area_id]" data-url="ajax/area">
+                    <option value="{$row.area_id}" selected=""></option>
+                </select>
+                <input class="form-control" name="row[addr]" type="text" value="{$row.addr}">
+            </div>
         </div>
     </div>
     <div class="form-group">

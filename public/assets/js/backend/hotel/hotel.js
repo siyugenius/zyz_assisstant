@@ -25,26 +25,19 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
-                        {field: 'hotel_id', title: __('Hotel_id')},
+                        //{field: 'hotel_no', title: __('Hotel_no')},
                         {field: 'name', title: __('Name')},
-                        {field: 'group_id', title: __('Group_id')},
-                        {field: 'province_id', title: __('Province_id')},
+                        {field: 'group.grp_name', title: __('Group_id')},
+                        /*{field: 'province_id', title: __('Province_id')},
                         {field: 'city_id', title: __('City_id')},
-                        {field: 'area_id', title: __('Area_id')},
-                        {field: 'longitude', title: __('Longitude'), operate:'BETWEEN'},
-                        {field: 'latitude', title: __('Latitude'), operate:'BETWEEN'},
+                        {field: 'area_id', title: __('Area_id')},*/
+                      /*  {field: 'longitude', title: __('Longitude'), operate:'BETWEEN'},
+                        {field: 'latitude', title: __('Latitude'), operate:'BETWEEN'},*/
                         {field: 'administrator', title: __('Administrator')},
                         {field: 'tel', title: __('Tel')},
-                        {field: 'other_tel', title: __('Other_tel')},
-                        {field: 'email', title: __('Email')},
+                        /*{field: 'other_tel', title: __('Other_tel')},
+                        {field: 'email', title: __('Email')},*/
                         {field: 'status', title: __('Status'), searchList: {"1":__('Status 1'),"2":__('Status 2')}, formatter: Table.api.formatter.status},
-                        {field: 'group.id', title: __('Group.id')},
-                        {field: 'group.grp_id', title: __('Group.grp_id')},
-                        {field: 'group.grp_name', title: __('Group.grp_name')},
-                        {field: 'group.grp_agent', title: __('Group.grp_agent')},
-                        {field: 'group.grp_mobile', title: __('Group.grp_mobile')},
-                        {field: 'group.other_mobile', title: __('Group.other_mobile')},
-                        {field: 'group.grp_status', title: __('Group.grp_status'), formatter: Table.api.formatter.status},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]

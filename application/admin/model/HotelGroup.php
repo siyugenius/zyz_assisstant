@@ -18,21 +18,21 @@ class HotelGroup extends Model
     
     // 追加属性
     protected $append = [
-        'grp_status_text'
+        'status_text'
     ];
     
 
     
-    public function getGrpStatusList()
+    public function getStatusList()
     {
-        return ['1' => __('Grp_status 1'),'2' => __('Grp_status 2')];
+        return ['1' => __('Status 1'),'2' => __('Status 2')];
     }     
 
 
-    public function getGrpStatusTextAttr($value, $data)
+    public function getStatusTextAttr($value, $data)
     {        
-        $value = $value ? $value : (isset($data['grp_status']) ? $data['grp_status'] : '');
-        $list = $this->getGrpStatusList();
+        $value = $value ? $value : (isset($data['status']) ? $data['status'] : '');
+        $list = $this->getStatusList();
         return isset($list[$value]) ? $list[$value] : '';
     }
 

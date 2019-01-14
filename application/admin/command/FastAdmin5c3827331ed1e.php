@@ -1,6 +1,6 @@
 <?php
 
-namespace app\admin\controller\hotel;
+namespace app\admin\command;
 
 use app\common\controller\Backend;
 

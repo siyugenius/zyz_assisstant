@@ -18,7 +18,7 @@ return [
     // 应用命名空间
     'app_namespace'          => 'app',
     // 应用调试模式
-    'app_debug'              => Env::get('app.debug', false),
+    'app_debug'              => Env::get('app.debug', true),
     // 应用Trace
     'app_trace'              => Env::get('app.trace', false),
     // 应用模式状态
@@ -55,7 +55,7 @@ return [
     // | 模块设置
     // +----------------------------------------------------------------------
     // 默认模块名
-    'default_module'         => 'admin.',
+    'default_module'         => 'admin',
     // 禁止访问模块
     'deny_module_list'       => ['common'],
     // 默认控制器名
@@ -138,6 +138,7 @@ return [
         '__PUBLIC__' => '',
         '__ROOT__'   => '',
         '__CDN__'    => '',
+        //'__JS__'    => '/public/',
     ],
     // 默认跳转页面对应的模板文件
     'dispatch_success_tmpl'  => APP_PATH . 'common' . DS . 'view' . DS . 'tpl' . DS . 'dispatch_jump.tpl',
@@ -150,7 +151,7 @@ return [
     // 错误显示信息,非调试模式有效
     'error_message'          => '你所浏览的页面暂时无法访问',
     // 显示错误信息
-    'show_error_msg'         => false,
+    'show_error_msg'         => true,
     // 异常处理handle类 留空使用 \think\exception\Handle
     'exception_handle'       => '',
     // +----------------------------------------------------------------------

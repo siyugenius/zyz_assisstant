@@ -245,8 +245,8 @@ class Ajax extends Backend
      */
     public function area()
     {
-        $province = $this->request->get('province');
-        $city = $this->request->get('city');
+        $province = $this->request->get('row.province_id');
+        $city = $this->request->get('row.city_id');
         $where = ['pid' => 0, 'level' => 1];
         $provincelist = null;
         if ($province !== '') {

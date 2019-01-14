@@ -1,42 +1,42 @@
-<form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
 
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Grp_id')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">{:__('Grp_no')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-grp_id" data-rule="required" data-source="grp/index" class="form-control selectpage" name="row[grp_id]" type="text" value="">
+            <input id="c-grp_no" data-rule="required" class="form-control" name="row[grp_no]" type="text" value="{$row.grp_no}">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Grp_name')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-grp_name" data-rule="required" class="form-control" name="row[grp_name]" type="text">
+            <input id="c-grp_name" data-rule="required" class="form-control" name="row[grp_name]" type="text" value="{$row.grp_name}">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Grp_agent')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-grp_agent" data-rule="required" class="form-control" name="row[grp_agent]" type="text">
+            <input id="c-grp_agent" data-rule="required" class="form-control" name="row[grp_agent]" type="text" value="{$row.grp_agent}">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Grp_mobile')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-grp_mobile" data-rule="required" class="form-control" name="row[grp_mobile]" type="text">
+            <input id="c-grp_mobile" data-rule="required" class="form-control" name="row[grp_mobile]" type="text" value="{$row.grp_mobile}">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Other_mobile')}:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-other_mobile" class="form-control" name="row[other_mobile]" type="text">
+            <input id="c-other_mobile" class="form-control" name="row[other_mobile]" type="text" value="{$row.other_mobile}">
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Grp_status')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">{:__('Status')}:</label>
         <div class="col-xs-12 col-sm-8">
             
             <div class="radio">
-            {foreach name="grpStatusList" item="vo"}
-            <label for="row[grp_status]-{$key}"><input id="row[grp_status]-{$key}" name="row[grp_status]" type="radio" value="{$key}" {in name="key" value="1"}checked{/in} /> {$vo}</label> 
+            {foreach name="statusList" item="vo"}
+            <label for="row[status]-{$key}"><input id="row[status]-{$key}" name="row[status]" type="radio" value="{$key}" {in name="key" value="$row.status"}checked{/in} /> {$vo}</label> 
             {/foreach}
             </div>
 

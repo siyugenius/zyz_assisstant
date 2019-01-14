@@ -5,12 +5,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // 初始化表格参数配置
             Table.api.init({
                 extend: {
-                    index_url: 'hotel/index',
-                    add_url: 'hotel/add',
-                    edit_url: 'hotel/edit',
-                    del_url: 'hotel/del',
-                    multi_url: 'hotel/multi',
-                    table: 'hotel',
+                    index_url: 'area/index',
+                    add_url: 'area/add',
+                    edit_url: 'area/edit',
+                    del_url: 'area/del',
+                    multi_url: 'area/multi',
+                    table: 'area',
                 }
             });
 
@@ -25,20 +25,17 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
-                        {field: 'hotel_id', title: __('Hotel_id')},
+                        {field: 'pid', title: __('Pid')},
+                        {field: 'shortname', title: __('Shortname')},
                         {field: 'name', title: __('Name')},
-                        {field: 'group_id', title: __('Group_id')},
-                        {field: 'province_id', title: __('Province_id')},
-                        {field: 'city_id', title: __('City_id')},
-                        {field: 'area_id', title: __('Area_id')},
-                        {field: 'addr', title: __('Addr')},
-                        {field: 'longitude', title: __('Longitude'), operate:'BETWEEN'},
-                        {field: 'latitude', title: __('Latitude'), operate:'BETWEEN'},
-                        {field: 'administrator', title: __('Administrator')},
-                        {field: 'tel', title: __('Tel')},
-                        {field: 'other_tel', title: __('Other_tel')},
-                        {field: 'email', title: __('Email')},
-                        {field: 'status', title: __('Status'), formatter: Table.api.formatter.status},
+                        {field: 'mergename', title: __('Mergename')},
+                        {field: 'level', title: __('Level')},
+                        {field: 'pinyin', title: __('Pinyin')},
+                        {field: 'code', title: __('Code')},
+                        {field: 'zip', title: __('Zip')},
+                        {field: 'first', title: __('First')},
+                        {field: 'lng', title: __('Lng')},
+                        {field: 'lat', title: __('Lat')},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]
