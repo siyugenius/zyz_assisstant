@@ -2,8 +2,14 @@
 
 namespace app\admin\controller\hotel;
 
-use app\admin\model\HotelGroup;
+use app\admin\model\AuthGroupAccess;
+use fast\Tree;
+use app\admin\model\AuthGroup;
 use app\common\controller\Backend;
+use app\admin\model\Admin;
+use app\common\model\Area;
+use fast\Random;
+use app\admin\model\HotelGroup;
 
 /**
  * 酒店管理
@@ -19,16 +25,65 @@ class Hotel extends Backend
      */
     protected $model = null;
     protected $relationSearch = true;
+    protected $childrenGroupIds = [];
+    protected $childrenAdminIds = [];
 
     public function _initialize()
     {
         parent::_initialize();
         $this->model = new \app\admin\model\Hotel;
-        $groupList = build_select('row[group_id]', \app\admin\model\HotelGroup::column('id,grp_name'), ['class' => 'form-control selectpicker']);
+        $groupList = build_select('row[group_id]', HotelGroup::column('id,grp_name'), ['class' => 'form-control selectpicker']);
+        $this->childrenAdminIds = $this->auth->getChildrenAdminIds(true);
+        $this->childrenGroupIds = $this->auth->getChildrenGroupIds(true);
+        $adminGroupList = collection(AuthGroup::where('id', 'in', $this->childrenGroupIds)->select())->toArray();
+        Tree::instance()->init($adminGroupList);
+        $groupdata = [];
+        if ($this->auth->isSuperAdmin())
+        {
+            $result = Tree::instance()->getTreeList(Tree::instance()->getTreeArray(0));
+            foreach ($result as $k => $v)
+            {
+                $groupdata[$v['id']] = $v['name'];
+            }
+        }
+        else
+        {
+            $result = [];
+            $groups = $this->auth->getGroups();
+            foreach ($groups as $m => $n)
+            {
+                $childlist = Tree::instance()->getTreeList(Tree::instance()->getTreeArray($n['id']));
+                $temp = [];
+                foreach ($childlist as $k => $v)
+                {
+                    $temp[$v['id']] = $v['name'];
+                }
+                $result[__($n['name'])] = $temp;
+            }
+            $groupdata = $result;
+        }
+
+
+        $this->view->assign('groupdata',$groupdata);
         $this->view->assign("groupList", $groupList);
         $this->view->assign("statusList", $this->model->getStatusList());
     }
 
+
+
+    /**
+     *
+     * 地址查询
+     * @param $id
+     * @return mixed
+     * @throws \think\exception\DbException
+     *
+     */
+    public function address($id)
+    {
+        $address = Area::get($id);
+        return $address['name'];
+    }
 
 
     public function index()
@@ -55,12 +110,20 @@ class Hotel extends Backend
                 ->select();
 
             $list = collection($list)->toArray();
+            foreach ($list as $k=>$v){
+                $province = $this->address($v['province_id']);
+                $city = $this->address($v['city_id']);
+                $area = $this->address($v['area_id']);
+                $list[$k]['address'] = $province.$city.$area.$v['addr'];
+            }
             $result = array("total" => $total, "rows" => $list);
 
             return json($result);
         }
         return $this->view->fetch();
     }
+
+
 
 
     public function edit($ids = NULL)
@@ -100,11 +163,103 @@ class Hotel extends Backend
             $this->error(__('Parameter %s can not be empty', ''));
         }
 
-        $groupList = build_select('row[group_id]', \app\admin\model\HotelGroup::column('id,grp_name'), $row['group_id'], ['class' => 'form-control selectpicker']);
+        $groupList = build_select('row[group_id]', HotelGroup::column('id,grp_name'), $row['group_id'], ['class' => 'form-control selectpicker']);
         $this->view->assign("groupList", $groupList);
         $this->view->assign("row", $row);
         return $this->view->fetch();
-
     }
+
+    /**
+     * 添加
+     */
+    public function add()
+    {
+        if ($this->request->isPost())
+        {
+            $params = $this->request->post("row/a");
+            if ($params)
+            {
+                $hotel['hotel_no'] = $params['hotel_no'];
+                $hotel['name'] = $params['name'];
+                $hotel['group_id'] = $params['group_id'];
+                $hotel['province_id'] = $params['province_id'];
+                $hotel['city_id'] = $params['city_id'];
+                $hotel['area_id'] = $params['area_id'];
+                $hotel['addr'] = $params['addr'];
+                $hotel['longitude'] = $params['longitude'];
+                $hotel['latitude'] = $params['latitude'];
+                $hotel['administrator'] = $params['administrator'];
+                $hotel['tel'] = $params['tel'];
+                $hotel['other_tel'] = $params['other_tel'];
+                $hotel['email'] = $params['email'];
+                $result = $this->model->validate('Hotel.add')->save($hotel);
+                if ($result === false)
+                {
+                    $this->error($this->model->getError());
+                }
+                $admin['username'] = $params['nickname'];
+                $admin['nickname'] = $params['nickname'];
+                $admin['salt'] = Random::alnum();
+                $admin['password'] = md5(md5($params['password']) . $admin['salt']);
+                $admin['avatar'] = '/assets/img/avatar.png';
+                $admin['email'] = $params['email'];
+                $admin['hotel_id'] = $this->model->id;
+                $Admin_model = new Admin();
+                $result = $Admin_model->validate('Admin.add')->save($admin);
+                if ($result === false)
+                {
+                    $this->error($Admin_model->getError());
+                }
+                $group = $this->request->post("group/a");
+
+                //过滤不允许的组别,避免越权
+                $group = array_intersect($this->childrenGroupIds, $group);
+                $dataset = [];
+                foreach ($group as $value)
+                {
+                    $dataset[] = ['uid' => $Admin_model->id, 'group_id' => $value];
+                }
+                model('AuthGroupAccess')->saveAll($dataset);
+                $this->success();
+            }
+            $this->error();
+        }
+        return $this->view->fetch();
+    }
+
+
+    // 查看酒店详情
+    public function detail($ids = NULL)
+    {
+        $row = $this->model->get($ids);
+        if (!$row)
+            $this->error(__('No Results were found'));
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            if (!in_array($row[$this->dataLimitField], $adminIds)) {
+                $this->error(__('You have no permission'));
+            }
+        }
+        // 地址
+        $province = $this->address($row['province_id']);
+        $city = $this->address($row['city_id']);
+        $area = $this->address($row['area_id']);
+        $row['address'] = $province.$city.$area.$row['addr'];
+        $group= HotelGroup::field('grp_name')->where('id',$row['group_id'])->find();
+        // 集团名称
+        $row['group'] = $group['grp_name'];
+        // 后台账户信息
+        $admin = Admin::field('nickname,id')->where('hotel_id',$row['id'])->find();
+        $row['nickname'] = $admin['nickname'];
+        $admingroupid = AuthGroupAccess::where('uid',$admin['id'])->find();
+        $admingroup = AuthGroup::field('name')->where('id',$admingroupid['group_id'])->find();
+        $row['admingroup'] = $admingroup['name'];
+
+        $this->view->assign("row", $row);
+        return $this->view->fetch();
+    }
+
+
+
 
 }

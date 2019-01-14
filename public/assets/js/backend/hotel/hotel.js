@@ -8,7 +8,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     index_url: 'hotel/hotel/index',
                     add_url: 'hotel/hotel/add',
                     edit_url: 'hotel/hotel/edit',
-                    del_url: 'hotel/hotel/del',
+                    //del_url: 'hotel/hotel/del',
                     multi_url: 'hotel/hotel/multi',
                     table: 'hotel',
                 }
@@ -27,6 +27,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'id', title: __('Id')},
                         //{field: 'hotel_no', title: __('Hotel_no')},
                         {field: 'name', title: __('Name')},
+                        {field: 'address', title: __('Address')},
                         {field: 'group.grp_name', title: __('Group_id')},
                         /*{field: 'province_id', title: __('Province_id')},
                         {field: 'city_id', title: __('City_id')},
@@ -38,7 +39,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         /*{field: 'other_tel', title: __('Other_tel')},
                         {field: 'email', title: __('Email')},*/
                         {field: 'status', title: __('Status'), searchList: {"1":__('Status 1'),"2":__('Status 2')}, formatter: Table.api.formatter.status},
-                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
+                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate,
+                            buttons:[
+                                {
+                                    name: 'view',
+                                    icon: 'fa fa-list',
+                                    title: __('view'),
+                                    classname: 'btn btn-xs btn-primary btn-dialog',
+                                    url: 'hotel/hotel/detail',
+                                    callback: function (data) {
+                                        Layer.alert("接收到回传数据：" + JSON.stringify(data), {title: "回传数据"});
+                                    },
+                                    visible: function (row) {
+                                        //返回true时按钮显示,返回false隐藏
+                                        return true;
+                                    }
+                                },
+                            ],
+                            formatter: Table.api.formatter.operate}
                     ]
                 ]
             });

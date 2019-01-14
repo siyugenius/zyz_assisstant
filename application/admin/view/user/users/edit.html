@@ -1,0 +1,124 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Name')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-name" data-rule="required" class="form-control" name="row[name]" type="text" value="{$row.name}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Tel')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-tel" data-rule="required" class="form-control" name="row[tel]" type="text" value="{$row.tel}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Id_number')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-id_number" data-rule="required" class="form-control" name="row[id_number]" type="text" value="{$row.id_number}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Native_plac')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-native_plac" class="form-control" name="row[native_plac]" type="text" value="{$row.native_plac}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Type')}:</label>
+        <div class="col-xs-12 col-sm-8">
+                        
+            <select  id="c-type" data-rule="required" class="form-control selectpicker" name="row[type]">
+                {foreach name="typeList" item="vo"}
+                    <option value="{$key}" {in name="key" value="$row.type"}selected{/in}>{$vo}</option>
+                {/foreach}
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Pwd')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-pwd" data-rule="required" class="form-control" name="row[pwd]" type="text" value="{$row.pwd}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Status')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            
+            <div class="radio">
+            {foreach name="statusList" item="vo"}
+            <label for="row[status]-{$key}"><input id="row[status]-{$key}" name="row[status]" type="radio" value="{$key}" {in name="key" value="$row.status"}checked{/in} /> {$vo}</label> 
+            {/foreach}
+            </div>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Balance')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-balance" class="form-control" step="0.01" name="row[balance]" type="number" value="{$row.balance}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Register_code')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-register_code" class="form-control" name="row[register_code]" type="text" value="{$row.register_code}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Withdraw_pwd')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-withdraw_pwd" class="form-control" name="row[withdraw_pwd]" type="text" value="{$row.withdraw_pwd}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Openid')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-openid" class="form-control" name="row[openid]" type="text" value="{$row.openid}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Reg_type')}:</label>
+        <div class="col-xs-12 col-sm-8">
+                        
+            <select  id="c-reg_type" data-rule="required" class="form-control selectpicker" name="row[reg_type]">
+                {foreach name="regTypeList" item="vo"}
+                    <option value="{$key}" {in name="key" value="$row.reg_type"}selected{/in}>{$vo}</option>
+                {/foreach}
+            </select>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Hotel_id')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-hotel_id" data-rule="required" data-source="hotel/index" class="form-control selectpage" name="row[hotel_id]" type="text" value="{$row.hotel_id}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Hotel_name')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-hotel_name" class="form-control" name="row[hotel_name]" type="text" value="{$row.hotel_name}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Create_time')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-create_time" class="form-control datetimepicker" data-date-format="YYYY-MM-DD" data-use-current="true" name="row[create_time]" type="text" value="{$row.create_time}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Unionid')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-unionid" class="form-control" name="row[unionid]" type="text" value="{$row.unionid}">
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>
