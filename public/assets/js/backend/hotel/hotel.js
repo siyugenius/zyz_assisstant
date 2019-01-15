@@ -8,7 +8,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     index_url: 'hotel/hotel/index',
                     add_url: 'hotel/hotel/add',
                     edit_url: 'hotel/hotel/edit',
-                    //del_url: 'hotel/hotel/del',
+                    // del_url: 'hotel/hotel/del',
                     multi_url: 'hotel/hotel/multi',
                     table: 'hotel',
                 }
@@ -21,23 +21,24 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 pk: 'id',
                 sortName: 'id',
+                sortOrder: 'asc',
                 columns: [
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
-                        //{field: 'hotel_no', title: __('Hotel_no')},
+                        {field: 'hotel_no', title: __('Hotel_no')},
                         {field: 'name', title: __('Name')},
                         {field: 'address', title: __('Address')},
                         {field: 'group.grp_name', title: __('Group_id')},
-                        /*{field: 'province_id', title: __('Province_id')},
-                        {field: 'city_id', title: __('City_id')},
-                        {field: 'area_id', title: __('Area_id')},*/
-                      /*  {field: 'longitude', title: __('Longitude'), operate:'BETWEEN'},
-                        {field: 'latitude', title: __('Latitude'), operate:'BETWEEN'},*/
+                        // {field: 'province_id', title: __('Province_id')},
+                        // {field: 'city_id', title: __('City_id')},
+                        // {field: 'area_id', title: __('Area_id')},
+                        // {field: 'longitude', title: __('Longitude'), operate:'BETWEEN'},
+                        // {field: 'latitude', title: __('Latitude'), operate:'BETWEEN'},
                         {field: 'administrator', title: __('Administrator')},
                         {field: 'tel', title: __('Tel')},
-                        /*{field: 'other_tel', title: __('Other_tel')},
-                        {field: 'email', title: __('Email')},*/
+                        // {field: 'other_tel', title: __('Other_tel')},
+                        // {field: 'email', title: __('Email')},
                         {field: 'status', title: __('Status'), searchList: {"1":__('Status 1'),"2":__('Status 2')}, formatter: Table.api.formatter.status},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate,
                             buttons:[
@@ -51,7 +52,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         Layer.alert("接收到回传数据：" + JSON.stringify(data), {title: "回传数据"});
                                     },
                                     visible: function (row) {
-                                        //返回true时按钮显示,返回false隐藏
+                                        // 返回true时按钮显示,返回false隐藏
                                         return true;
                                     }
                                 },

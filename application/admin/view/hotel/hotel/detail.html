@@ -70,6 +70,8 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2"><b>后台账号信息</b></label>
     </div>
+
+    {if $row.nickname}
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Group')}:</label>
         <div class="col-xs-12 col-sm-8">
@@ -82,5 +84,14 @@
             {$row.nickname}
         </div>
     </div>
+    {else}
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            没有后台账户信息
+        </div>
+    </div>
+    {/if}
+
 
 </form>

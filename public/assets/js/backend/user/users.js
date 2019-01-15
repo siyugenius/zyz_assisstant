@@ -7,8 +7,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 extend: {
                     index_url: 'user/users/index',
                     add_url: 'user/users/add',
-                    edit_url: 'user/users/edit',
-                    del_url: 'user/users/del',
+                    // edit_url: 'user/users/edit',
+                    // del_url: 'user/users/del',
                     multi_url: 'user/users/multi',
                     table: 'user',
                 }
@@ -37,11 +37,30 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         // {field: 'withdraw_pwd', title: __('Withdraw_pwd')},
                         // {field: 'openid', title: __('Openid')},
                         // {field: 'reg_type', title: __('Reg_type'), searchList: {"1":__('Reg_type 1'),"2":__('Reg_type 2')}, formatter: Table.api.formatter.normal},
-                        // {field: 'hotel_id', title: __('Hotel_id')},
+                        {field: 'hotel_no', title: __('酒店编号')},
                         {field: 'hotel_name', title: __('Hotel_name')},
                         {field: 'create_time', title: __('Create_time'), operate:'RANGE', addclass:'datetimerange'},
                         // {field: 'unionid', title: __('Unionid')},
-                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
+                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate,
+                            buttons:[
+                                {
+                                    name: 'view',
+                                    icon: 'fa fa-list',
+                                    title: __('view'),
+                                    classname: 'btn btn-xs btn-primary btn-dialog',
+                                    url: 'user/users/detail',
+                                    callback: function (data) {
+                                        Layer.alert("接收到回传数据：" + JSON.stringify(data), {title: "回传数据"});
+                                    },
+                                    visible: function (row) {
+                                        // 返回true时按钮显示,返回false隐藏
+                                        return true;
+                                    }
+                                },
+                            ],
+
+                        },
+
                     ]
                 ]
             });

@@ -10,6 +10,7 @@ use app\admin\model\Admin;
 use app\common\model\Area;
 use fast\Random;
 use app\admin\model\HotelGroup;
+use think\Model;
 
 /**
  * 酒店管理
@@ -123,52 +124,6 @@ class Hotel extends Backend
         return $this->view->fetch();
     }
 
-
-
-
-    public function edit($ids = NULL)
-    {
-
-        $row = $this->model->get($ids);
-        if (!$row)
-            $this->error(__('No Results were found'));
-        $adminIds = $this->getDataLimitAdminIds();
-        if (is_array($adminIds)) {
-            if (!in_array($row[$this->dataLimitField], $adminIds)) {
-                $this->error(__('You have no permission'));
-            }
-        }
-        if ($this->request->isPost()) {
-            $params = $this->request->post("row/a");
-            if ($params) {
-                try {
-                    //是否采用模型验证
-                    if ($this->modelValidate) {
-                        $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
-                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : $name) : $this->modelValidate;
-                        $row->validate($validate);
-                    }
-                    $result = $row->allowField(true)->save($params);
-                    if ($result !== false) {
-                        $this->success();
-                    } else {
-                        $this->error($row->getError());
-                    }
-                } catch (\think\exception\PDOException $e) {
-                    $this->error($e->getMessage());
-                } catch (\think\Exception $e) {
-                    $this->error($e->getMessage());
-                }
-            }
-            $this->error(__('Parameter %s can not be empty', ''));
-        }
-
-        $groupList = build_select('row[group_id]', HotelGroup::column('id,grp_name'), $row['group_id'], ['class' => 'form-control selectpicker']);
-        $this->view->assign("groupList", $groupList);
-        $this->view->assign("row", $row);
-        return $this->view->fetch();
-    }
-
     /**
      * 添加
      */
@@ -179,7 +134,8 @@ class Hotel extends Backend
             $params = $this->request->post("row/a");
             if ($params)
             {
-                $hotel['hotel_no'] = $params['hotel_no'];
+                $last_data = \app\admin\model\Hotel::max('hotel_no');
+                $hotel['hotel_no'] = $last_data + 1;
                 $hotel['name'] = $params['name'];
                 $hotel['group_id'] = $params['group_id'];
                 $hotel['province_id'] = $params['province_id'];
@@ -192,6 +148,12 @@ class Hotel extends Backend
                 $hotel['tel'] = $params['tel'];
                 $hotel['other_tel'] = $params['other_tel'];
                 $hotel['email'] = $params['email'];
+
+                // 这里需要针对name做唯一验证
+//                $hotelValidate = \think\Loader::validate('Hotel');
+//                $hotelValidate->rule([
+//                    'name' => 'require|max:50|unique:hotel,name,' . $row->id,
+//                ]);
                 $result = $this->model->validate('Hotel.add')->save($hotel);
                 if ($result === false)
                 {
@@ -205,8 +167,15 @@ class Hotel extends Backend
                 $admin['email'] = $params['email'];
                 $admin['hotel_id'] = $this->model->id;
                 $Admin_model = new Admin();
-                $result = $Admin_model->validate('Admin.add')->save($admin);
-                if ($result === false)
+
+                // 这里需要针对username和email做唯一验证
+                $adminValidate = \think\Loader::validate('Admin');
+                $adminValidate->rule([
+                    'username' => 'require|max:50|unique:admin,username,' . $row->id,
+                    // 'email'    => 'require|email|unique:admin,email,' . $row->id
+                ]);
+                $admin_result = $Admin_model->validate('Admin.add')->save($admin);
+                if ($admin_result === false)
                 {
                     $this->error($Admin_model->getError());
                 }
@@ -224,6 +193,84 @@ class Hotel extends Backend
             }
             $this->error();
         }
+        return $this->view->fetch();
+    }
+
+
+    public function edit($ids = NULL)
+    {
+        $row = $this->model->get($ids);
+        $hoteladmin = Admin::field('nickname,id,status')->where('hotel_id',$ids)->find();
+        $group = AuthGroupAccess::where('uid',$hoteladmin['id'])->value('group_id');
+
+        if (!$row) {
+            $this->error(__('No Results were found'));
+        }
+        $adminIds = $this->getDataLimitAdminIds();
+        if (is_array($adminIds)) {
+            if (!in_array($row[$this->dataLimitField], $adminIds)) {
+                $this->error(__('You have no permission'));
+            }
+        }
+        if ($this->request->isPost()) {
+            $params = $this->request->post("row/a");            // 酒店信息
+            $hotel_admin  = $this->request->post("admin/a");    // 酒店后台账户信息
+            $group = $this->request->post("group/a");           // 后台账户权限
+
+            if ($params && $hotel_admin && $group) {
+                try {
+                    // 是否采用模型验证
+                    if ($this->modelValidate) {
+                        $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
+                        $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : $name) : $this->modelValidate;
+                        $row->validate($validate);
+                    }
+                    // 这里需要针对name做唯一验证
+//                    $hotelValidate = \think\Loader::validate('Hotel');
+//                    $hotelValidate->rule([
+//                        'name' => 'require|max:50|unique:hotel,name,' . $row->id,
+//                    ]);
+//                    $result = $this->model->validate('Hotel.add')->save($hotel);
+                    $result = $row->allowField(true)->save($params);
+                    $admin_result = Model('app\admin\model\Admin')->where('id',$hotel_admin['id'])->update(['status'=>$hotel_admin['status']]);
+
+                    if ($result !== false && $admin_result !== false)
+                    {
+                        // 先移除所有权限
+                        model('AuthGroupAccess')->where('uid', $hotel_admin['id'])->delete();
+                        // 过滤不允许的组别,避免越权
+                        $group = array_intersect($this->childrenGroupIds, $group);
+                        $dataset = [];
+                        foreach ($group as $value)
+                        {
+                            $dataset[] = ['uid' => $hotel_admin['id'], 'group_id' => $value];
+                        }
+                        model('AuthGroupAccess')->saveAll($dataset);
+                        $this->success();
+                    } else {
+
+                        $this->error($row->getError());
+                    }
+                } catch (\think\exception\PDOException $e) {
+                    $this->error($e->getMessage());
+                } catch (\think\Exception $e) {
+                    $this->error($e->getMessage());
+                }
+            }
+            $this->error(__('Parameter %s can not be empty', ''));
+        }
+        $groupList = build_select('row[group_id]', HotelGroup::column('id,grp_name'), $row['group_id'], ['class' => 'form-control selectpicker']);
+        $admingrouplist = $this->auth->getGroups($group);
+        $groupids = [];
+        foreach ($admingrouplist as $k => $v)
+        {
+            $groupids[] = $v['id'];
+        }
+
+        $this->view->assign("groupList", $groupList);   // 酒店集团
+        $this->view->assign("groupids", $groupids);     // 后台用户权限组
+        $this->view->assign('admin', $hoteladmin);      // 后台用户信息
+        $this->view->assign("row", $row);               // 酒店信息
         return $this->view->fetch();
     }
 
@@ -258,8 +305,5 @@ class Hotel extends Backend
         $this->view->assign("row", $row);
         return $this->view->fetch();
     }
-
-
-
 
 }

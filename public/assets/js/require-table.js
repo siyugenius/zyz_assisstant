@@ -14,9 +14,8 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
             titleForm: '', //为空则不显示标题，不定义默认显示：普通搜索
             idTable: 'commonTable',
             showExport: true,
-            exportDataType: "all",
-            // exportTypes: ['json', 'xml', 'csv', 'txt', 'doc', 'excel'],
-            exportTypes: [ 'excel'],
+            exportDataType: "excel",
+            exportTypes: ['json', 'xml', 'csv', 'txt', 'doc', 'excel'],
             pageSize: 10,
             pageList: [10, 25, 50, 'All'],
             pagination: true,
@@ -25,8 +24,8 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
             singleSelect: false, //是否启用单选
             showRefresh: false,
             locale: 'zh-CN',
-            showToggle: true,
-            showColumns: true,
+            showToggle: false,
+            showColumns: false,
             pk: 'id',
             sortName: 'id',
             sortOrder: 'desc',
