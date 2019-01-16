@@ -28,6 +28,7 @@ class Hotel extends Backend
     protected $relationSearch = true;
     protected $childrenGroupIds = [];
     protected $childrenAdminIds = [];
+    protected $searchFields = 'name';
 
     public function _initialize()
     {
@@ -63,7 +64,6 @@ class Hotel extends Backend
             }
             $groupdata = $result;
         }
-
 
         $this->view->assign('groupdata',$groupdata);
         $this->view->assign("groupList", $groupList);
@@ -116,6 +116,7 @@ class Hotel extends Backend
                 $city = $this->address($v['city_id']);
                 $area = $this->address($v['area_id']);
                 $list[$k]['address'] = $province.$city.$area.$v['addr'];
+               // $list['group'] = $groupdata;
             }
             $result = array("total" => $total, "rows" => $list);
 

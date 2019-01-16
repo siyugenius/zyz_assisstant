@@ -23,6 +23,8 @@ class Users extends Backend
     protected $model = null;
     protected $AdminModel = null;
     protected $HotelModel = null;
+    protected $searchFields = 'name';
+
     public function _initialize()
     {
         parent::_initialize();
@@ -37,23 +39,52 @@ class Users extends Backend
 
     public function index()
     {
-        if ($this->request->isAjax()){
-            $hotel_id = $this->AdminModel->where('id',$this->auth->id)->value('hotel_id');
+        //设置过滤方法
+        $this->request->filter(['strip_tags']);
 
+        if ($this->request->isAjax()){
+            //如果发送的来源是Selectpage，则转发到Selectpage
+            if ($this->request->request('keyField')) {
+                return $this->selectpage();
+            }
+
+            list($where, $sort, $order, $offset, $limit) = $this->buildparams();
+            $hotel_id = $this->AdminModel->where('id',$this->auth->id)->value('hotel_id');
             if (!empty($hotel_id)) {
+                // $where['hotel_id'] = $hotel_id;
                 $hotel_no = $this->HotelModel->where('id',$hotel_id)->value('hotel_no');
-                $row = $this->model->where('hotel_id',$hotel_id)->select();
+                $row = $this->model
+                    ->where($where)
+                    ->where('hotel_id','=',$hotel_id)
+                    ->order($sort, $order)
+                    ->limit($offset, $limit)
+                    ->select();
+                $total = $this->model
+                    ->where($where)
+                    ->where('hotel_id','=',$hotel_id)
+                    ->order($sort, $order)
+                    ->count();
                 array_walk($row,function($v) use($hotel_no) {
-                    $v['hotel_no'] = $hotel_no;
+                    $v->hotel_no = $hotel_no;
                 });
             } else {
-                $row = $this->model->select();
+                $row = $this->model
+                    ->where($where)
+                    ->order($sort, $order)
+                    ->limit($offset, $limit)
+                    ->select();
+
+                $total = $this->model
+                    ->where($where)
+                    ->order($sort, $order)
+                    ->count();
+
                 array_walk($row,function($v){
                     $hotel_no = $this->HotelModel->where('id',$v['hotel_id'])->value('hotel_no');
-                    $v['hotel_no'] = $hotel_no;
+                    $v->hotel_no = $hotel_no;
                 });
             }
-            $total = count($row);
+            // $total = count($row);
             $result = array("total" => $total, "rows" => $row);
             return json($result);
         }
