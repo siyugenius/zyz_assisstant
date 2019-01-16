@@ -47,11 +47,9 @@ class Users extends Backend
             if ($this->request->request('keyField')) {
                 return $this->selectpage();
             }
-
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $hotel_id = $this->AdminModel->where('id',$this->auth->id)->value('hotel_id');
             if (!empty($hotel_id)) {
-                // $where['hotel_id'] = $hotel_id;
                 $hotel_no = $this->HotelModel->where('id',$hotel_id)->value('hotel_no');
                 $row = $this->model
                     ->where($where)
