@@ -32,7 +32,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'address', title: __('Address'), operate: false},
                         {field: 'province_id', title: __('Province_id'), visible: false, align: 'left', addclass:"selectpage", extend:"data-source='Area/getProvince' data-field='name'"},
                         {field: 'group_id', title: __('Group_id'), visible: false, align: 'left', addclass:"selectpage", extend:"data-source='hotel/group/index' data-field='grp_name'"},
-                        {field: 'group.grp_name', title: __('Group_id') ,operate: false, formatter: Table.api.formatter.label},
+                        {field: 'group.grp_name', title: __('Group_id') , operate: false, formatter: Table.api.formatter.label},
                         // {field: 'city_id', title: __('City_id')},
                         // {field: 'area_id', title: __('Area_id')},
                         // {field: 'longitude', title: __('Longitude'), operate:'BETWEEN'},
@@ -61,7 +61,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             ],
                             formatter: Table.api.formatter.operate}
                     ]
-                ]
+                ],
             });
 
             // 为表格绑定事件

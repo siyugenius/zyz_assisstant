@@ -93,12 +93,12 @@
         <label class="control-label col-xs-12 col-sm-2"><b>后台账号信息</b></label>
     </div>
 
-    {if $admin}
+
     <input type="hidden" name="admin[id]" value="{$admin.id}">
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Nickname')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">{:__('Username')}:</label>
         <div class="col-xs-12 col-sm-8">
-            {$admin.nickname}
+            {$admin.username}
         </div>
     </div>
 
@@ -115,15 +115,6 @@
             {:build_radios('admin[status]', ['normal'=>__('Normal'), 'hidden'=>__('Hidden')], $admin['status'])}
         </div>
     </div>
-    {else}
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2"></label>
-        <div class="col-xs-12 col-sm-8">
-            没有后台账户信息
-        </div>
-    </div>
-    {/if}
-
 
     <div class="form-group layer-footer">
         <label class="control-label col-xs-12 col-sm-2"></label>

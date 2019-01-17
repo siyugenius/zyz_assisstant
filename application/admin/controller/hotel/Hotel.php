@@ -2,6 +2,7 @@
 
 namespace app\admin\controller\hotel;
 
+use app\admin\library\Auth;
 use app\admin\model\AuthGroupAccess;
 use fast\Tree;
 use app\admin\model\AuthGroup;
@@ -135,6 +136,7 @@ class Hotel extends Backend
             $params = $this->request->post("row/a");
             if ($params)
             {
+                // 酒店信息
                 $last_data = \app\admin\model\Hotel::max('hotel_no');
                 $hotel['hotel_no'] = $last_data + 1;
                 $hotel['name'] = $params['name'];
@@ -149,39 +151,30 @@ class Hotel extends Backend
                 $hotel['tel'] = $params['tel'];
                 $hotel['other_tel'] = $params['other_tel'];
                 $hotel['email'] = $params['email'];
-
-                // 这里需要针对name做唯一验证
-//                $hotelValidate = \think\Loader::validate('Hotel');
-//                $hotelValidate->rule([
-//                    'name' => 'require|max:50|unique:hotel,name,' . $row->id,
-//                ]);
                 $result = $this->model->validate('Hotel.add')->save($hotel);
                 if ($result === false)
                 {
                     $this->error($this->model->getError());
                 }
-                $admin['username'] = $params['nickname'];
-                $admin['nickname'] = $params['nickname'];
-                $admin['salt'] = Random::alnum();
-                $admin['password'] = md5(md5($params['password']) . $admin['salt']);
-                $admin['avatar'] = '/assets/img/avatar.png';
-                $admin['email'] = $params['email'];
-                $admin['hotel_id'] = $this->model->id;
+                // 后台账户信息
+                $hotel_admin = [];
+                $hotel_admin['username'] = $params['username'];
+                $hotel_admin['nickname'] = $params['username'];
+                $hotel_admin['salt'] = Random::alnum();
+                $hotel_admin['password'] = md5(md5($params['password']) . $hotel_admin['salt']);
+                $hotel_admin['avatar'] = '/assets/img/avatar.png';
+                $hotel_admin['email'] = $params['email'];
+                $hotel_admin['hotel_id'] = $this->model->id;
                 $Admin_model = new Admin();
-
-                // 这里需要针对username和email做唯一验证
-                $adminValidate = \think\Loader::validate('Admin');
-                $adminValidate->rule([
-                    'username' => 'require|max:50|unique:admin,username,' . $row->id,
-                    // 'email'    => 'require|email|unique:admin,email,' . $row->id
-                ]);
-                $admin_result = $Admin_model->validate('Admin.add')->save($admin);
+                $admin_result = $Admin_model->validate('Admin.add')->save($hotel_admin);
+                echo '<pre>';
+                print_r($admin_result);
                 if ($admin_result === false)
                 {
-                    $this->error($Admin_model->getError());
+                    $this->error($this->model->getError());
                 }
+                // 后台账户组
                 $group = $this->request->post("group/a");
-
                 //过滤不允许的组别,避免越权
                 $group = array_intersect($this->childrenGroupIds, $group);
                 $dataset = [];
@@ -189,7 +182,13 @@ class Hotel extends Backend
                 {
                     $dataset[] = ['uid' => $Admin_model->id, 'group_id' => $value];
                 }
-                model('AuthGroupAccess')->saveAll($dataset);
+                $AuthGroupAccessModel = new AuthGroupAccess();
+                $authg_result = $AuthGroupAccessModel->saveAll($dataset);
+                if ($authg_result === false)
+                {
+                    // $this->error($this->model->getError());
+                    $this->error('hotel admin auth group error');
+                }
                 $this->success();
             }
             $this->error();
@@ -203,7 +202,6 @@ class Hotel extends Backend
         $row = $this->model->get($ids);
         $hoteladmin = Admin::field('nickname,id,status')->where('hotel_id',$ids)->find();
         $group = AuthGroupAccess::where('uid',$hoteladmin['id'])->value('group_id');
-
         if (!$row) {
             $this->error(__('No Results were found'));
         }

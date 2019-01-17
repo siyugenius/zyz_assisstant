@@ -7,6 +7,7 @@ use app\admin\model\Admin;
 use app\admin\model\Auth;
 use app\admin\model\Hotel;
 use think\Model;
+// use app\admin\model\Order;
 
 /**
  * 智游助手用户管理
@@ -49,6 +50,10 @@ class Users extends Backend
             }
             list($where, $sort, $order, $offset, $limit) = $this->buildparams();
             $hotel_id = $this->AdminModel->where('id',$this->auth->id)->value('hotel_id');
+            // $OrderModel = new Order();
+            // $uids = $OrderModel->where('hotel_id','=',$hotel_id)->field('uid')->select();
+            // array_unique();
+            // where('id','in',$ids)
             if (!empty($hotel_id)) {
                 $hotel_no = $this->HotelModel->where('id',$hotel_id)->value('hotel_no');
                 $row = $this->model

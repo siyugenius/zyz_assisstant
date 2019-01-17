@@ -21,6 +21,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 pk: 'id',
                 sortName: 'id',
+                sortOrder: 'asc',
+                exportTypes: ['excel'],
                 columns: [
                     [
                         {checkbox: true},
